@@ -8,6 +8,7 @@ cap = cv2.VideoCapture(0)
 # define colors in BGR colorspace
 blue = [255, 0, 0]
 green = [0, 255, 0]
+red = [0, 0, 255]
 
 # main
 while True:
@@ -17,7 +18,7 @@ while True:
     hsvImage = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     # set the color to track / detect
-    lowerLimit, upperLimit = get_limits(color=green)
+    lowerLimit, upperLimit = get_limits(color=red)
 
     # get a mask from all the pixels that we want to detect
     # function returns a location of all the pixels containing
