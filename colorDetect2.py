@@ -13,9 +13,10 @@ green = [0, 255, 0]
 while True:
     ret, frame = cap.read()
 
-    # c converting original colorspace of RGB to HSV
+    # converting original colorspace of RGB to HSV for color tracking
     hsvImage = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
+    # set the color to track / detect
     lowerLimit, upperLimit = get_limits(color=green)
 
     # get a mask from all the pixels that we want to detect
