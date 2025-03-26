@@ -3,7 +3,7 @@ import pyautogui
 from PIL import Image
 from util import get_limits
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 # define colors in BGR colorspace
 blue = [255, 0, 0]
@@ -13,12 +13,13 @@ red = [0, 0, 255]
 # main
 while True:
     ret, frame = cap.read()
+    pyautogui.FAILSAFE = False
 
     # converting original colorspace of RGB to HSV for color tracking
     hsvImage = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     # set the color to track / detect
-    lowerLimit, upperLimit = get_limits(color=red)
+    lowerLimit, upperLimit = get_limits(color=green)
 
     # get a mask from all the pixels that we want to detect
     # function returns a location of all the pixels containing

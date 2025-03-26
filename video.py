@@ -2,7 +2,7 @@ import cv2
 
 # the 0 signifies to look for a webcam
 # instead of taking in an actual video file
-stream = cv2.VideoCapture(0)
+stream = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 if not stream.isOpened():
     print("No camera detected.")
