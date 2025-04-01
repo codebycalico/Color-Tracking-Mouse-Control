@@ -25,7 +25,7 @@ while True:
     with mouse.Listener(
         on_click = on_click
     ) as listener:
-        listener.join(0.1)
+        listener.join(0.2)
 
     # converting original colorspace of RGB to HSV for color tracking
     hsvImage = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
