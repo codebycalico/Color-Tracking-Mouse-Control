@@ -1,19 +1,31 @@
 import cv2
+from pynput import mouse
 import pyautogui
 from PIL import Image
 from util import get_limits
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
+#centerx = 0, centery = 0
+
 # define colors in BGR colorspace
 blue = [255, 0, 0]
 green = [0, 255, 0]
 red = [0, 0, 255]
 
+def on_click(x, y, button, pressed):
+    if pressed:
+        print("Button pressed.")
+
 # main
 while True:
     ret, frame = cap.read()
     pyautogui.FAILSAFE = False
+
+    with mouse.Listener(
+        on_click = on_click
+    ) as listener:
+        listener.join(0.1)
 
     # converting original colorspace of RGB to HSV for color tracking
     hsvImage = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -44,7 +56,8 @@ while True:
         centery = y1 + (y2 - y1)
 
         cv2.circle(frame, (centerx, centery), 10, (0, 0, 255), 5)
-        pyautogui.moveTo(centerx, centery, 0)
+
+        #    pyautogui.moveTo(centerx, centery, 0)
 
     cv2.imshow('Frame', frame)
 
