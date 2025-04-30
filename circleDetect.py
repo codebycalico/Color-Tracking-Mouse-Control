@@ -1,5 +1,4 @@
 import numpy as np
-import argparse
 import cv2
 import pyautogui
 
@@ -7,7 +6,7 @@ kinect_cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 # roughly define the upper right and lower left
 # bounds of the sandbox
-upperBound_x, upperBound_y, lowerBound_x, lowerBound_y = 600, 275, 1400, 900
+upperBound_x, upperBound_y, lowerBound_x, lowerBound_y = 280, 650, 880, 1400
 
 # hold the circle from the previous frame
 prevCircle = None
@@ -18,6 +17,12 @@ dist = lambda x1, y1, x2, y2: (x1 - x2) ** 2 + (y1 - y2) ** 2
 while True:
     ret, frame = kinect_cam.read()
     pyautogui.FAILSAFE = False
+
+    # flip kinect live video horizontally
+    frame = cv2.flip(frame, 0)
+
+    # rotate kinect cam feed to match the Unity projection
+    frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 
     # gray scale the kinect video
     gray_kinect_cam = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -46,7 +51,7 @@ while True:
         # chosen holds the circle to compare other circles to
         chosen = None
         for i in circles[0, :]:
-            if ( upperBound_x <= i[0] < (upperBound_x + lowerBound_x) ) and ( upperBound_y <= i[1] < ( upperBound_y + lowerBound_y) ):
+            if ( upperBound_x < i[0] < lowerBound_x ) and ( upperBound_y < i[1] < lowerBound_y ):
                 if chosen is None:
                     chosen = i
                 if prevCircle is not None:
@@ -60,11 +65,13 @@ while True:
                 cv2.circle(frame, (chosen[0], chosen[1]), 1, (0, 100, 100), 3)
                 # draw around the circumference of the chosen circle
                 cv2.circle(frame, (chosen[0], chosen[1]), chosen[2], (255, 0, 255), 3)
-                pyautogui.moveTo(chosen[0] - 280, chosen[1] - 320 - chosen[2], 0)
+                pyautogui.moveTo(chosen[0] + chosen[2], chosen[1] + chosen[2], 0)
+                pyautogui.mouseDown(button='left')
                 prevCircle = chosen
 
+    pyautogui.mouseUp(button='left')
     # show the output in the cam
-    # cv2.rectangle(frame, upperBound, lowerBound, (255, 0, 0), 5)
+    cv2.rectangle(frame, (upperBound_x, upperBound_y), (lowerBound_x, lowerBound_y), (255, 0, 0), 5)
     cv2.imshow("circles", frame)
         
     if cv2.waitKey(1) & 0xFF == ord('q'):
